@@ -8,7 +8,8 @@ const Item = ({ name, age }) => {
   );
 };
 
-const url = "https://api.sampleapis.com/coffee/hot";
+const url =
+  "https://raw.githubusercontent.com/techoi/raw-data-api/main/simple-api.json?id=react";
 
 export default function TestMocking() {
   const [data, setData] = useState(null);
@@ -17,13 +18,23 @@ export default function TestMocking() {
   const handleClick = () => {
     fetch(url)
       .then((response) => {
-        return response.data;
+        return response.json();
       })
       .then((json) => {
         setData(json.data);
       })
-      .error((error) => {
+      .catch((error) => {
         setError(`Something Wrong: ${error}`);
+      });
+  };
+
+  const handleClick2 = () => {
+    fetch("/login")
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        console.log(JSON.stringify(json));
       });
   };
 
@@ -31,9 +42,22 @@ export default function TestMocking() {
     return <p>{error}</p>;
   }
 
+  console.log(data);
   return (
     <div>
       <button onClick={handleClick}>데이터 가져오기</button>
+      <button onClick={handleClick2}>데이터 가져오기2</button>
+      {data && (
+        <ul>
+          {data.people.map((person) => (
+            <Item
+              key={`${person.name}-${person.age}`}
+              name={person.name}
+              age={person.age}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
