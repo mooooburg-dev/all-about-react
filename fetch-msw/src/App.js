@@ -1,9 +1,11 @@
-import Counter from "./features/counter/Counter";
+import MobxExample from './components/MobxExample';
+// import Counter from './features/counter/Counter';
 
 function App() {
   return (
     <div className="App">
-      <Counter />
+      {/* <Counter /> */}
+      <MobxExample />
     </div>
   );
 }
