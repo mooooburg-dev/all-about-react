@@ -1,11 +1,18 @@
-import Cache from './components/SWRExample/Cache';
-import Profile from './components/SWRExample/Profile';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import Example from './components/ReactQueryExample/Example';
+import { ReactQueryDevtools } from 'react-query/devtools';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <div className="App">
-      <Profile />
-      <Cache />
+      {/* <Profile /> */}
+      {/* <Cache /> */}
+      <QueryClientProvider client={queryClient}>
+        <Example />
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </div>
   );
 }
