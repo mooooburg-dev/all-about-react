@@ -4,8 +4,41 @@ import { getAllPostIds, getPostData } from '../../lib/posts';
 import Date from '../../components/date';
 import utilStyles from '../../styles/utils.module.css';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-export async function getStaticProps({ params }) {
+// export async function getStaticProps({ params }) {
+//   const postData = await getPostData(params.id);
+//   return {
+//     props: {
+//       postData,
+//     },
+//   };
+// }
+
+// export async function getStaticPaths() {
+//   const paths = getAllPostIds();
+//   // Returns an array that looks like this:
+//   // [
+//   //   {
+//   //     params: {
+//   //       id: 'ssg-ssr'
+//   //     }
+//   //   },
+//   //   {
+//   //     params: {
+//   //       id: 'pre-rendering'
+//   //     }
+//   //   }
+//   // ]
+//   return {
+//     paths: [{ params: { id: 'ssg-ssr' } }],
+//     // paths,
+//     fallback: 'blocking',
+//   };
+// }
+
+export async function getServerSideProps({ params, req }) {
+  console.log(`req.cookie: ${JSON.stringify(req.cookies)}`);
   const postData = await getPostData(params.id);
   return {
     props: {
@@ -14,29 +47,9 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export async function getStaticPaths() {
-  const paths = getAllPostIds();
-  // Returns an array that looks like this:
-  // [
-  //   {
-  //     params: {
-  //       id: 'ssg-ssr'
-  //     }
-  //   },
-  //   {
-  //     params: {
-  //       id: 'pre-rendering'
-  //     }
-  //   }
-  // ]
-  return {
-    // paths: [{params: {id:'ssg-ssr'}}],
-    paths,
-    fallback: false,
-  };
-}
-
 export default function Post({ postData }) {
+  const router = useRouter();
+
   useEffect(() => {
     const getText = async () => {
       const res = await fetch('/api/hello');
@@ -46,6 +59,10 @@ export default function Post({ postData }) {
     };
     getText();
   }, []);
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Layout>
